@@ -217,7 +217,7 @@ class _FilterUpState extends State<Filter> {
         body: SingleChildScrollView(
           physics: ClampingScrollPhysics(),
           child:
-              Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+              SizedBox(height: MediaQuery.of(context).size.height,   child:   Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
             CarouselSlider(
               options: CarouselOptions(
                   onPageChanged: (index, reason) {
@@ -273,7 +273,7 @@ class _FilterUpState extends State<Filter> {
                           color: Colors.yellow.shade800,
                           fontWeight: FontWeight.bold)),
                 )),
-          ]),
+          ])),
         ));
   }
 }
