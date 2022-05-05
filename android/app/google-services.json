@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "721672830480",
+    "firebase_url": "https://garimpoo-eb269-default-rtdb.firebaseio.com",
+    "project_id": "garimpoo-eb269",
+    "storage_bucket": "garimpoo-eb269.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:721672830480:android:efd75357ab1615aa0c1495",
+        "android_client_info": {
+          "package_name": "com.garimpoo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "721672830480-6qijeh9p93uusq5cuenvm8bsmut5hu9l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpVz3Nmj4IjvtBvRICLi6UQwHbyMNT3Lg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "721672830480-6qijeh9p93uusq5cuenvm8bsmut5hu9l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "721672830480-96el4qdhlul2vtf0s2kcap5majkjossv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.garimpoo"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
