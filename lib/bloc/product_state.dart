@@ -14,9 +14,10 @@ class ProductsLoadedSuccess extends ProductState {
 
   final List<Product> products;
   final int total;
+  final int previousLastIndex;
   final int page;
 
-  ProductsLoadedSuccess(this.products, this.total, this.page);
+  ProductsLoadedSuccess(this.products, this.total, this.page, this.previousLastIndex);
 
   @override
   List<Object?> get props => [products, total, page];

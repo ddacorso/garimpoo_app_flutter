@@ -35,7 +35,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
             products.addAll(product.products);
 
-            emit(ProductsLoadedSuccess(products, product.total, 0));
+            emit(ProductsLoadedSuccess(products, product.total, 0, 0));
           }
         }
       } catch (e) {
@@ -55,10 +55,9 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
             nextPage);
 
         List<Product> products = List.from(event.products);
-
         products.addAll(product.products);
 
-        emit(ProductsLoadedSuccess(products, product.total, nextPage));
+        emit(ProductsLoadedSuccess(products, product.total, nextPage, event.products.length));
       } catch (e) {
         emit(ProductsError(e.toString()));
       }
@@ -84,7 +83,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
           products.addAll(product.products);
 
-          emit(ProductsLoadedSuccess(products, product.total, 0));
+          emit(ProductsLoadedSuccess(products, product.total, 0, 0));
         }
       } catch (e) {
         emit(ProductsError(e.toString()));

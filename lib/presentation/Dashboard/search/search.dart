@@ -70,6 +70,8 @@ class ButtonClipper2 extends CustomClipper<Path> {
 class _SearchSignUpState extends State<Search> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  final ItemScrollController _scrollController = ItemScrollController();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -188,11 +190,17 @@ class _SearchSignUpState extends State<Search> {
       return Container();
     }, listener: (context, state) {
 
+
+      if (state is ProductsLoadedSuccess) {
+        WidgetsBinding.instance!.addPostFrameCallback((_) {
+          _scrollController.scrollTo(
+              index: state.previousLastIndex,
+              duration: Duration(milliseconds: 300));
+        });
+      }
     });
 
   }
-
-  final ItemScrollController _scrollController = ItemScrollController();
 
   ScrollablePositionedList dataBody(
       List<Product> products, int total, int page) {

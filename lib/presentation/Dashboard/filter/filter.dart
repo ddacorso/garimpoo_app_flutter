@@ -5,7 +5,6 @@ import 'package:garimpoo/model/Filter.dart' as model;
 
 import '../../../bloc/filter_bloc.dart';
 import '../../../model/Keyword.dart';
-import '../../../shared/Credentials.dart';
 import '../../../util/constants.dart';
 
 class Filter extends StatefulWidget {
@@ -46,7 +45,8 @@ class _FilterUpState extends State<Filter> {
         listener: (context, state) {});
   }
 
-  ListView buildListMoreFilters(model.FilterScreen filterScreen, int currentIndex) {
+  ListView buildListMoreFilters(
+      model.FilterScreen filterScreen, int currentIndex) {
     return ListView(children: [
       //title 1
       Padding(
@@ -71,9 +71,8 @@ class _FilterUpState extends State<Filter> {
                   activeColor: Colors.yellow.shade800,
                   value: filterScreen.isPublishedToday,
                   onChanged: (value) {
-                    BlocProvider.of<FilterBloc>(context).add(
-                        FilterSwitchValue(filterScreen, value, 0, currentIndex)
-                    );
+                    BlocProvider.of<FilterBloc>(context).add(FilterSwitchValue(
+                        filterScreen, value, 0, currentIndex));
                   },
                 ),
               ],
@@ -85,9 +84,8 @@ class _FilterUpState extends State<Filter> {
                   activeColor: Colors.yellow.shade800,
                   value: filterScreen.isFinishingToday,
                   onChanged: (value) {
-                    BlocProvider.of<FilterBloc>(context).add(
-                        FilterSwitchValue(filterScreen, value, 1, currentIndex)
-                    );
+                    BlocProvider.of<FilterBloc>(context).add(FilterSwitchValue(
+                        filterScreen, value, 1, currentIndex));
                   },
                 ),
               ],
@@ -99,26 +97,32 @@ class _FilterUpState extends State<Filter> {
   }
 
   ListView buildListKeyNot(model.FilterScreen filterScreen, int currentIndex) {
+    List<TextEditingController> controllers = currentIndex == 0
+        ? filterScreen.keywordController!
+        : filterScreen.notificationController!;
 
-    List<TextEditingController> controllers = currentIndex == 0 ? filterScreen.keywordController! : filterScreen.notificationController!;
+    List<Keyword> data = filterScreen.keywords
+        .where((element) => element.type == (currentIndex == 0 ? 'key' : 'not'))
+        .toList();
+    int maxCount = currentIndex == 0
+        ? filterScreen.maxKeywords
+        : filterScreen.maxNotifications;
 
+    String textAlert = '';
 
-    List<Keyword> data = filterScreen.keywords.where((element) => element.type == (currentIndex == 0 ? 'key' : 'not')).toList();
-    int maxCount = currentIndex == 0 ? filterScreen.maxKeywords : filterScreen.maxNotifications;
-
-     String textAlert = '';
-
-    Text alert = currentIndex == 0 ? Text(
-      txtGarimpooAlert,
-      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-    ) : Text(
-      txtNotificationsAlert,
-      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-    );
+    Text alert = currentIndex == 0
+        ? Text(
+            txtGarimpooAlert,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          )
+        : Text(
+            txtNotificationsAlert,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          );
 
     return ListView(children: [
       //title 1
-       Padding(
+      Padding(
         padding: EdgeInsets.only(top: 25, left: 20, right: 20),
         child: Center(
           child: alert,
@@ -140,12 +144,12 @@ class _FilterUpState extends State<Filter> {
                           onTap: () {
                             if (!isEnabled) {
                               BlocProvider.of<FilterBloc>(context).add(
-                                FilterSwitchValue(filterScreen, true, index, currentIndex)
-                              );
+                                  FilterSwitchValue(
+                                      filterScreen, true, index, currentIndex));
                             }
                           },
                           child: TextField(
-                            controller: controllers[index],
+                              controller: controllers[index],
                               enabled: isEnabled,
                               style: TextStyle(color: Colors.black38),
                               decoration: InputDecoration(
@@ -176,8 +180,8 @@ class _FilterUpState extends State<Filter> {
                     value: isEnabled,
                     onChanged: (value) {
                       BlocProvider.of<FilterBloc>(context).add(
-                          FilterSwitchValue(filterScreen, value, index, currentIndex)
-                      );
+                          FilterSwitchValue(
+                              filterScreen, value, index, currentIndex));
                     },
                   ),
                 ],
@@ -193,7 +197,8 @@ class _FilterUpState extends State<Filter> {
             onPressed: () {
               if (data.length < maxCount) {
                 BlocProvider.of<FilterBloc>(context).add(
-                  FilterAddKeyword(filterScreen, currentIndex == 0 ? 'key' : 'not'),
+                  FilterAddKeyword(
+                      filterScreen, currentIndex == 0 ? 'key' : 'not'),
                 );
               }
             },
@@ -212,68 +217,68 @@ class _FilterUpState extends State<Filter> {
   }
 
   Scaffold buildFilters(int currentIndex, model.FilterScreen filterScreen) {
+    print(currentIndex);
+
     return Scaffold(
         backgroundColor: Color.fromRGBO(239, 241, 248, 1),
-        body: SingleChildScrollView(
-          physics: ClampingScrollPhysics(),
-          child:
-              SizedBox(height: MediaQuery.of(context).size.height,   child:   Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-            CarouselSlider(
-              options: CarouselOptions(
-                  onPageChanged: (index, reason) {
-                     BlocProvider.of<FilterBloc>(context)
-                         .add(FilterLoadTab(index, filterScreen));
-                  },
-                  viewportFraction: 1,
-                  height: MediaQuery.of(context).size.height - 240),
-              items: [0, 1, 2].map((i) {
-                return Builder(
-                  builder: (BuildContext context) {
-                    return Container(
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          color: Colors.transparent,
-                        ),
-                        child: currentIndex == 2 || currentIndex == 0 ?  buildListKeyNot(filterScreen, currentIndex) : buildListMoreFilters(filterScreen, currentIndex));
-                  },
-                );
-              }).toList(),
+        body: Column(children: [
+          Expanded(
+              child: CarouselSlider(
+            options: CarouselOptions(
+              onPageChanged: (index, reason) {
+                BlocProvider.of<FilterBloc>(context)
+                    .add(FilterLoadTab(index, filterScreen));
+              },
+              aspectRatio: 0.9,
+              enlargeCenterPage: true,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [0, 1, 2].map((url) {
-                int index = [0, 1, 2].indexOf(url);
-                return Container(
-                  width: 8.0,
-                  height: 8.0,
-                  margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: currentIndex == index
-                        ? Color.fromRGBO(0, 0, 0, 0.9)
-                        : Color.fromRGBO(0, 0, 0, 0.4),
-                  ),
-                );
-              }).toList(),
+            items: [0, 1, 2].map((i) {
+              return Builder(
+                builder: (BuildContext context) {
+                  return Container(
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                      ),
+                      child: currentIndex == 2 || currentIndex == 0
+                          ? buildListKeyNot(filterScreen, currentIndex)
+                          : buildListMoreFilters(filterScreen, currentIndex));
+                },
+              );
+            }).toList(),
+          )),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [0, 1, 2].map((url) {
+              int index = [0, 1, 2].indexOf(url);
+              return Container(
+                width: 8.0,
+                height: 8.0,
+                margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: currentIndex == index
+                      ? Color.fromRGBO(0, 0, 0, 0.9)
+                      : Color.fromRGBO(0, 0, 0, 0.4),
+                ),
+              );
+            }).toList(),
+          ),
+
+          Padding(padding: EdgeInsets.only(bottom: 10, left: 15, right: 15), child: SizedBox(width: MediaQuery.of(context).size.width, child: ElevatedButton(
+            style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Colors.white),
             ),
-            Padding(
-                padding:
-                    const EdgeInsets.only(top: 5.0, right: 20.0, left: 20.0),
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.white)),
-                  onPressed: () {
-                    //
-                     BlocProvider.of<FilterBloc>(context)
-                         .add(FilterRequestSave(filterScreen, currentIndex));
-                  },
-                  child: Text(txtSave,
-                      style: TextStyle(
-                          color: Colors.yellow.shade800,
-                          fontWeight: FontWeight.bold)),
-                )),
-          ])),
-        ));
+            onPressed: () {
+              //
+              BlocProvider.of<FilterBloc>(context)
+                  .add(FilterRequestSave(filterScreen, currentIndex));
+            },
+            child: Text(txtSave,
+                style: TextStyle(
+                    color: Colors.yellow.shade800,
+                    fontWeight: FontWeight.bold)),
+          ))),
+        ]));
   }
 }
